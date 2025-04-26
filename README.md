@@ -71,12 +71,66 @@ Automatically act on your data and communicate using third-party services like T
 
 
 # PROGRAM:
+```
+#include <WiFi.h>
+#include <WiFiClient.h>;
+#include <ThingSpeak.h>;
+const char* ssid = "oneplus 11R"; 
+const char* password = "123456789"; 
+int val;
+#include <DHT.h>
+#define DHT11PIN 23
+#define DHTTYPE DHT11
+DHT dht(DHT11PIN, DHTTYPE);
+float h,tc ;
+WiFiClient client;
+unsigned long myChannelNumber = 1870717; 
+//unsigned long myChannelField = 1870717;
+//const int ChannelField = 1;
+const char * myWriteAPIKey = "IXWWM4G5GCKTTQ4Q"; 
 
+void setup()
+{
+Serial.begin(115200);
+
+delay(10);
+WiFi.begin(ssid, password);
+ThingSpeak.begin(client);
+dht.begin();
+  delay(1000);
+  Serial.println("DHT11 Temperature and Humidity ");
+
+}
+void loop()
+{
+h = dht.readHumidity();
+tc = dht.readTemperature();
+  Serial.print('\n');
+  Serial.print("Humidity = ");
+  Serial.print(h);
+  Serial.print("%,  ");
+  Serial.print("Temperature = ");
+  Serial.print(tc);
+  Serial.print("°C, ");
+ 
+ThingSpeak.writeField(myChannelNumber, 1,h, myWriteAPIKey); //Update in ThingSpeak
+ThingSpeak.writeField(myChannelNumber, 2,tc, myWriteAPIKey); //Update in ThingSpeak
+
+delay(100);
+
+}
+
+```
 # CIRCUIT DIAGRAM:
 
+![image](https://github.com/user-attachments/assets/248dbc86-b2eb-4078-a880-72f1de799204)
+
 # OUTPUT:
+
+<img width="514" alt="image" src="https://github.com/user-attachments/assets/8004504b-93af-494d-8948-c5926282742b" />
+
+
 
 # RESULT:
 
 Thus the temperature sensor values are updated in the Thing speak using ESP32 controller.
-
